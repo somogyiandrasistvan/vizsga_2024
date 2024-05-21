@@ -1,35 +1,72 @@
 import DataService from "../modell/DataService.js";
 import HibaView from "../view/HibaView.js";
+import TemaView from "../view/TemaView.js";
 import View from "../view/View.js";
 
 class Controller {
+  #dataService;
+  #pontszam = 0;
 
-    #dataService;
+  constructor() {
+    this.init();
+  }
 
-    constructor() {
-        this.init();
-    }
+  init() {
+    this.#dataService = new DataService();
+    this.pontszam();
 
-    init() {
-        this.#dataService = new DataService();
+    this.#dataService.getData(
+      "api/tema",
+      this.megjelenitTema,
+      this.hibaMegjelenit
+    );
 
-        /*
-        this.#dataService.getData("api/", this.megjelenit, this.hibaMegjelenit);
+    this.#dataService.getData(
+      "api/szavak",
+      this.megjelenit,
+      this.hibaMegjelenit
+    );
 
-        $(window).on("esemenyNev", (event) => {
-            console.log(event.detail);
-            this.dataService.postData("api/", event.detail);
-        });
-        */
-    }
+    $(window).on("pontszam", (event) => {
+      this.#pontszam++;
+      $("#pontszam").empty();
+      this.pontszam();
+    });
 
-    megjelenit(list) {
-        new View(list, $("#"));
-    }
+    $(window).on("select", (event) => {
+      if (event.detail != 0) {
+        $("#szavak").empty();
+        this.#dataService.getData(
+          "api/szavak/" + event.detail,
+          this.megjelenit,
+          this.hibaMegjelenit
+        );
+      } else {
+        $("#szavak").empty();
+        this.#dataService.getData(
+          "api/szavak",
+          this.megjelenit,
+          this.hibaMegjelenit
+        );
+      }
+    });
+  }
 
-    hibaMegjelenit(error) {
-        new HibaView(error, $("#"));
-    }
+  megjelenit(list) {
+    new View(list, $("#szavak"));
+  }
+
+  megjelenitTema(list) {
+    new TemaView(list, $("#tema"));
+  }
+
+  hibaMegjelenit(error) {
+    new HibaView(error, $("#hiba"));
+  }
+
+  pontszam() {
+    $("#pontszam").append("<h5>pontok száma: " + this.#pontszam + "</h5>");
+  }
 }
 
 export default Controller;

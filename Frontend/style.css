@@ -1,0 +1,39 @@
+article{
+    padding: 50px;
+}
+
+#fejlec {
+    display: flex;
+}
+
+
+#szovegek {
+
+    display: flex;
+}
+
+#jo {
+    display: none;
+}
+#tema{
+    padding-bottom: 10px;
+}
+
+#pontszam{
+    padding-top: 10px;
+}
+
+#rossz {
+    display: none;
+}
+
+@media only screen and (max-width: 800px) {
+    #szovegek {
+        display: grid;
+    }
+
+    #fejlec {
+        padding: 10px;
+        display: none;
+    }
+}
